@@ -1,6 +1,14 @@
-export default function extent(values, valueof) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = extent;
+
+function extent(values, valueof) {
   let min;
   let max;
+
   if (valueof === undefined) {
     for (const value of values) {
       if (value != null) {
@@ -14,6 +22,7 @@ export default function extent(values, valueof) {
     }
   } else {
     let index = -1;
+
     for (let value of values) {
       if ((value = valueof(value, ++index, values)) != null) {
         if (min === undefined) {
@@ -25,5 +34,6 @@ export default function extent(values, valueof) {
       }
     }
   }
+
   return [min, max];
 }

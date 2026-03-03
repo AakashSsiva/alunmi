@@ -1,9 +1,14 @@
-import quantile, {quantileIndex} from "./quantile.js";
+"use strict";
 
-export default function median(values, valueof) {
-  return quantile(values, 0.5, valueof);
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = median;
 
-export function medianIndex(values, valueof) {
-  return quantileIndex(values, 0.5, valueof);
+var _quantile = _interopRequireDefault(require("./quantile.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function median(values, valueof) {
+  return (0, _quantile.default)(values, 0.5, valueof);
 }

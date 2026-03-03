@@ -1,7 +1,16 @@
-import count from "../count.js";
-import quantile from "../quantile.js";
+"use strict";
 
-export default function thresholdFreedmanDiaconis(values, min, max) {
-  const c = count(values), d = quantile(values, 0.75) - quantile(values, 0.25);
-  return c && d ? Math.ceil((max - min) / (2 * d * Math.pow(c, -1 / 3))) : 1;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = thresholdFreedmanDiaconis;
+
+var _count = _interopRequireDefault(require("../count.js"));
+
+var _quantile = _interopRequireDefault(require("../quantile.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function thresholdFreedmanDiaconis(values, min, max) {
+  return Math.ceil((max - min) / (2 * ((0, _quantile.default)(values, 0.75) - (0, _quantile.default)(values, 0.25)) * Math.pow((0, _count.default)(values), -1 / 3)));
 }

@@ -1,8 +1,16 @@
-import {InternSet} from "internmap";
+"use strict";
 
-export default function intersection(values, ...others) {
-  values = new InternSet(values);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = intersection;
+
+var _index = require("../../../lib-vendor/internmap/src/index.js");
+
+function intersection(values, ...others) {
+  values = new _index.InternSet(values);
   others = others.map(set);
+
   out: for (const value of values) {
     for (const other of others) {
       if (!other.has(value)) {
@@ -11,9 +19,10 @@ export default function intersection(values, ...others) {
       }
     }
   }
+
   return values;
 }
 
 function set(values) {
-  return values instanceof InternSet ? values : new InternSet(values);
+  return values instanceof _index.InternSet ? values : new _index.InternSet(values);
 }

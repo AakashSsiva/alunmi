@@ -1,5 +1,14 @@
-import transpose from "./transpose.js";
+"use strict";
 
-export default function zip() {
-  return transpose(arguments);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = zip;
+
+var _transpose = _interopRequireDefault(require("./transpose.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function zip() {
+  return (0, _transpose.default)(arguments);
 }

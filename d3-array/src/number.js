@@ -1,8 +1,16 @@
-export default function number(x) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = number;
+exports.numbers = numbers;
+
+function number(x) {
   return x === null ? NaN : +x;
 }
 
-export function* numbers(values, valueof) {
+function* numbers(values, valueof) {
   if (valueof === undefined) {
     for (let value of values) {
       if (value != null && (value = +value) >= value) {
@@ -11,6 +19,7 @@ export function* numbers(values, valueof) {
     }
   } else {
     let index = -1;
+
     for (let value of values) {
       if ((value = valueof(value, ++index, values)) != null && (value = +value) >= value) {
         yield value;

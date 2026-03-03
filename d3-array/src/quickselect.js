@@ -1,15 +1,16 @@
-import {ascendingDefined, compareDefined} from "./sort.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = quickselect;
+
+var _sort = require("./sort.js");
 
 // Based on https://github.com/mourner/quickselect
 // ISC license, Copyright 2018 Vladimir Agafonkin.
-export default function quickselect(array, k, left = 0, right = Infinity, compare) {
-  k = Math.floor(k);
-  left = Math.floor(Math.max(0, left));
-  right = Math.floor(Math.min(array.length - 1, right));
-
-  if (!(left <= k && k <= right)) return array;
-
-  compare = compare === undefined ? ascendingDefined : compareDefined(compare);
+function quickselect(array, k, left = 0, right = array.length - 1, compare) {
+  compare = compare === undefined ? _sort.ascendingDefined : (0, _sort.compareDefined)(compare);
 
   while (right > left) {
     if (right - left > 600) {
@@ -26,19 +27,18 @@ export default function quickselect(array, k, left = 0, right = Infinity, compar
     const t = array[k];
     let i = left;
     let j = right;
-
     swap(array, left, k);
     if (compare(array[right], t) > 0) swap(array, left, right);
 
     while (i < j) {
       swap(array, i, j), ++i, --j;
+
       while (compare(array[i], t) < 0) ++i;
+
       while (compare(array[j], t) > 0) --j;
     }
 
-    if (compare(array[left], t) === 0) swap(array, left, j);
-    else ++j, swap(array, j, right);
-
+    if (compare(array[left], t) === 0) swap(array, left, j);else ++j, swap(array, j, right);
     if (j <= k) left = j + 1;
     if (k <= j) right = j - 1;
   }

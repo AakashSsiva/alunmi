@@ -1,8 +1,16 @@
-export default function variance(values, valueof) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = variance;
+
+function variance(values, valueof) {
   let count = 0;
   let delta;
   let mean = 0;
   let sum = 0;
+
   if (valueof === undefined) {
     for (let value of values) {
       if (value != null && (value = +value) >= value) {
@@ -13,6 +21,7 @@ export default function variance(values, valueof) {
     }
   } else {
     let index = -1;
+
     for (let value of values) {
       if ((value = valueof(value, ++index, values)) != null && (value = +value) >= value) {
         delta = value - mean;
@@ -21,5 +30,6 @@ export default function variance(values, valueof) {
       }
     }
   }
+
   if (count > 1) return sum / (count - 1);
 }
