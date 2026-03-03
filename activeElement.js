@@ -1,13 +1,20 @@
-import ownerDocument from './ownerDocument';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+exports.__esModule = true;
+exports.default = activeElement;
+
+var _ownerDocument = _interopRequireDefault(require("./ownerDocument"));
+
 /**
  * Returns the actively focused element safely.
  *
  * @param doc the document to check
  */
-
-export default function activeElement(doc) {
+function activeElement(doc) {
   if (doc === void 0) {
-    doc = ownerDocument();
+    doc = (0, _ownerDocument.default)();
   }
 
   // Support: IE 9 only
@@ -23,3 +30,5 @@ export default function activeElement(doc) {
     return doc.body;
   }
 }
+
+module.exports = exports["default"];

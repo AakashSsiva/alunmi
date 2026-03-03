@@ -1,9 +1,18 @@
-import css from './css';
-import listen from './listen';
-import triggerEvent from './triggerEvent';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+exports.__esModule = true;
+exports.default = transitionEnd;
+
+var _css = _interopRequireDefault(require("./css"));
+
+var _listen = _interopRequireDefault(require("./listen"));
+
+var _triggerEvent = _interopRequireDefault(require("./triggerEvent"));
 
 function parseDuration(node) {
-  var str = css(node, 'transitionDuration') || '';
+  var str = (0, _css.default)(node, 'transitionDuration') || '';
   var mult = str.indexOf('ms') === -1 ? 1000 : 1;
   return parseFloat(str) * mult;
 }
@@ -15,9 +24,9 @@ function emulateTransitionEnd(element, duration, padding) {
 
   var called = false;
   var handle = setTimeout(function () {
-    if (!called) triggerEvent(element, 'transitionend', true);
+    if (!called) (0, _triggerEvent.default)(element, 'transitionend', true);
   }, duration + padding);
-  var remove = listen(element, 'transitionend', function () {
+  var remove = (0, _listen.default)(element, 'transitionend', function () {
     called = true;
   }, {
     once: true
@@ -28,12 +37,14 @@ function emulateTransitionEnd(element, duration, padding) {
   };
 }
 
-export default function transitionEnd(element, handler, duration, padding) {
+function transitionEnd(element, handler, duration, padding) {
   if (duration == null) duration = parseDuration(element) || 0;
   var removeEmulate = emulateTransitionEnd(element, duration, padding);
-  var remove = listen(element, 'transitionend', handler);
+  var remove = (0, _listen.default)(element, 'transitionend', handler);
   return function () {
     removeEmulate();
     remove();
   };
 }
+
+module.exports = exports["default"];

@@ -1,8 +1,17 @@
-import canUseDOM from './canUseDOM';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+exports.__esModule = true;
+exports.default = scrollbarSize;
+
+var _canUseDOM = _interopRequireDefault(require("./canUseDOM"));
+
 var size;
-export default function scrollbarSize(recalc) {
+
+function scrollbarSize(recalc) {
   if (!size && size !== 0 || recalc) {
-    if (canUseDOM) {
+    if (_canUseDOM.default) {
       var scrollDiv = document.createElement('div');
       scrollDiv.style.position = 'absolute';
       scrollDiv.style.top = '-9999px';
@@ -17,3 +26,5 @@ export default function scrollbarSize(recalc) {
 
   return size;
 }
+
+module.exports = exports["default"];

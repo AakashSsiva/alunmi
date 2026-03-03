@@ -1,22 +1,32 @@
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+exports.__esModule = true;
+exports.default = exports.onceSupported = exports.optionsSupported = void 0;
+
+var _canUseDOM = _interopRequireDefault(require("./canUseDOM"));
+
 /* eslint-disable no-return-assign */
-import canUseDOM from './canUseDOM';
-export var optionsSupported = false;
-export var onceSupported = false;
+var optionsSupported = false;
+exports.optionsSupported = optionsSupported;
+var onceSupported = false;
+exports.onceSupported = onceSupported;
 
 try {
   var options = {
     get passive() {
-      return optionsSupported = true;
+      return exports.optionsSupported = optionsSupported = true;
     },
 
     get once() {
       // eslint-disable-next-line no-multi-assign
-      return onceSupported = optionsSupported = true;
+      return exports.onceSupported = onceSupported = exports.optionsSupported = optionsSupported = true;
     }
 
   };
 
-  if (canUseDOM) {
+  if (_canUseDOM.default) {
     window.addEventListener('test', options, options);
     window.removeEventListener('test', options, true);
   }
@@ -53,4 +63,5 @@ function addEventListener(node, eventName, handler, options) {
   node.addEventListener(eventName, handler, options);
 }
 
-export default addEventListener;
+var _default = addEventListener;
+exports.default = _default;

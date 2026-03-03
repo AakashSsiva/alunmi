@@ -1,3 +1,8 @@
+"use strict";
+
+exports.__esModule = true;
+exports.default = attribute;
+
 /**
  * Gets or sets an attribute of a given element.
  * 
@@ -5,7 +10,7 @@
  * @param attr the attribute to get or set
  * @param val the attribute value
  */
-export default function attribute(node, attr, val) {
+function attribute(node, attr, val) {
   if (node) {
     if (typeof val === 'undefined') {
       return node.getAttribute(attr);
@@ -18,3 +23,5 @@ export default function attribute(node, attr, val) {
     }
   }
 }
+
+module.exports = exports["default"];

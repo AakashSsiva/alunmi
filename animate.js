@@ -1,7 +1,18 @@
-import css from './css';
-import hyphenate from './hyphenate';
-import isTransform from './isTransform';
-import transitionEnd from './transitionEnd';
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _css = _interopRequireDefault(require("./css"));
+
+var _hyphenate = _interopRequireDefault(require("./hyphenate"));
+
+var _isTransform = _interopRequireDefault(require("./isTransform"));
+
+var _transitionEnd = _interopRequireDefault(require("./transitionEnd"));
+
 var reset = {
   transition: '',
   'transition-duration': '',
@@ -27,9 +38,9 @@ function _animate(_ref) {
   var transforms = '';
   Object.keys(properties).forEach(function (key) {
     var value = properties[key];
-    if (isTransform(key)) transforms += key + "(" + value + ") ";else {
+    if ((0, _isTransform.default)(key)) transforms += key + "(" + value + ") ";else {
       cssValues[key] = value;
-      cssProperties.push(hyphenate(key));
+      cssProperties.push((0, _hyphenate.default)(key));
     }
   });
 
@@ -40,7 +51,7 @@ function _animate(_ref) {
 
   function done(event) {
     if (event.target !== event.currentTarget) return;
-    css(node, reset);
+    (0, _css.default)(node, reset);
     if (callback) callback.call(this, event);
   }
 
@@ -51,15 +62,15 @@ function _animate(_ref) {
     cssValues['transition-timing-function'] = easing || 'linear';
   }
 
-  var removeListener = transitionEnd(node, done, duration); // eslint-disable-next-line no-unused-expressions
+  var removeListener = (0, _transitionEnd.default)(node, done, duration); // eslint-disable-next-line no-unused-expressions
 
   node.clientLeft; // trigger page reflow
 
-  css(node, cssValues);
+  (0, _css.default)(node, cssValues);
   return {
     cancel: function cancel() {
       removeListener();
-      css(node, reset);
+      (0, _css.default)(node, reset);
     }
   };
 }
@@ -87,4 +98,6 @@ function animate(nodeOrOptions, properties, duration, easing, callback) {
   });
 }
 
-export default animate;
+var _default = animate;
+exports.default = _default;
+module.exports = exports["default"];
