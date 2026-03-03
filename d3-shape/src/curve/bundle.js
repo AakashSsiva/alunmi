@@ -1,17 +1,25 @@
-import {Basis} from "./basis.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _basis = require("./basis.js");
 
 function Bundle(context, beta) {
-  this._basis = new Basis(context);
+  this._basis = new _basis.Basis(context);
   this._beta = beta;
 }
 
 Bundle.prototype = {
-  lineStart: function() {
+  lineStart: function () {
     this._x = [];
     this._y = [];
+
     this._basis.lineStart();
   },
-  lineEnd: function() {
+  lineEnd: function () {
     var x = this._x,
         y = this._y,
         j = x.length - 1;
@@ -26,31 +34,32 @@ Bundle.prototype = {
 
       while (++i <= j) {
         t = i / j;
-        this._basis.point(
-          this._beta * x[i] + (1 - this._beta) * (x0 + t * dx),
-          this._beta * y[i] + (1 - this._beta) * (y0 + t * dy)
-        );
+
+        this._basis.point(this._beta * x[i] + (1 - this._beta) * (x0 + t * dx), this._beta * y[i] + (1 - this._beta) * (y0 + t * dy));
       }
     }
 
     this._x = this._y = null;
+
     this._basis.lineEnd();
   },
-  point: function(x, y) {
+  point: function (x, y) {
     this._x.push(+x);
+
     this._y.push(+y);
   }
 };
 
-export default (function custom(beta) {
-
+var _default = function custom(beta) {
   function bundle(context) {
-    return beta === 1 ? new Basis(context) : new Bundle(context, beta);
+    return beta === 1 ? new _basis.Basis(context) : new Bundle(context, beta);
   }
 
-  bundle.beta = function(beta) {
+  bundle.beta = function (beta) {
     return custom(+beta);
   };
 
   return bundle;
-})(0.85);
+}(0.85);
+
+exports.default = _default;

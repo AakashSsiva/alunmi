@@ -1,7 +1,17 @@
-import {linearish} from "./linear.js";
-import number from "./number.js";
+"use strict";
 
-export default function identity(domain) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = identity;
+
+var _linear = require("./linear.js");
+
+var _number = _interopRequireDefault(require("./number.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function identity(domain) {
   var unknown;
 
   function scale(x) {
@@ -10,19 +20,18 @@ export default function identity(domain) {
 
   scale.invert = scale;
 
-  scale.domain = scale.range = function(_) {
-    return arguments.length ? (domain = Array.from(_, number), scale) : domain.slice();
+  scale.domain = scale.range = function (_) {
+    return arguments.length ? (domain = Array.from(_, _number.default), scale) : domain.slice();
   };
 
-  scale.unknown = function(_) {
+  scale.unknown = function (_) {
     return arguments.length ? (unknown = _, scale) : unknown;
   };
 
-  scale.copy = function() {
+  scale.copy = function () {
     return identity(domain).unknown(unknown);
   };
 
-  domain = arguments.length ? Array.from(domain, number) : [0, 1];
-
-  return linearish(scale);
+  domain = arguments.length ? Array.from(domain, _number.default) : [0, 1];
+  return (0, _linear.linearish)(scale);
 }

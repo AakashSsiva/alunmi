@@ -1,20 +1,29 @@
-import {epsilon} from "../math.js";
-import {Cardinal} from "./cardinal.js";
+"use strict";
 
-export function point(that, x, y) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+exports.point = point;
+
+var _math = require("../math.js");
+
+var _cardinal = require("./cardinal.js");
+
+function point(that, x, y) {
   var x1 = that._x1,
       y1 = that._y1,
       x2 = that._x2,
       y2 = that._y2;
 
-  if (that._l01_a > epsilon) {
+  if (that._l01_a > _math.epsilon) {
     var a = 2 * that._l01_2a + 3 * that._l01_a * that._l12_a + that._l12_2a,
         n = 3 * that._l01_a * (that._l01_a + that._l12_a);
     x1 = (x1 * a - that._x0 * that._l12_2a + that._x2 * that._l01_2a) / n;
     y1 = (y1 * a - that._y0 * that._l12_2a + that._y2 * that._l01_2a) / n;
   }
 
-  if (that._l23_a > epsilon) {
+  if (that._l23_a > _math.epsilon) {
     var b = 2 * that._l23_2a + 3 * that._l23_a * that._l12_a + that._l12_2a,
         m = 3 * that._l23_a * (that._l23_a + that._l12_a);
     x2 = (x2 * b + that._x1 * that._l23_2a - x * that._l12_2a) / m;
@@ -30,28 +39,32 @@ function CatmullRom(context, alpha) {
 }
 
 CatmullRom.prototype = {
-  areaStart: function() {
+  areaStart: function () {
     this._line = 0;
   },
-  areaEnd: function() {
+  areaEnd: function () {
     this._line = NaN;
   },
-  lineStart: function() {
-    this._x0 = this._x1 = this._x2 =
-    this._y0 = this._y1 = this._y2 = NaN;
-    this._l01_a = this._l12_a = this._l23_a =
-    this._l01_2a = this._l12_2a = this._l23_2a =
-    this._point = 0;
+  lineStart: function () {
+    this._x0 = this._x1 = this._x2 = this._y0 = this._y1 = this._y2 = NaN;
+    this._l01_a = this._l12_a = this._l23_a = this._l01_2a = this._l12_2a = this._l23_2a = this._point = 0;
   },
-  lineEnd: function() {
+  lineEnd: function () {
     switch (this._point) {
-      case 2: this._context.lineTo(this._x2, this._y2); break;
-      case 3: this.point(this._x2, this._y2); break;
+      case 2:
+        this._context.lineTo(this._x2, this._y2);
+
+        break;
+
+      case 3:
+        this.point(this._x2, this._y2);
+        break;
     }
-    if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
+
+    if (this._line || this._line !== 0 && this._point === 1) this._context.closePath();
     this._line = 1 - this._line;
   },
-  point: function(x, y) {
+  point: function (x, y) {
     x = +x, y = +y;
 
     if (this._point) {
@@ -61,10 +74,22 @@ CatmullRom.prototype = {
     }
 
     switch (this._point) {
-      case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
-      case 1: this._point = 2; break;
-      case 2: this._point = 3; // falls through
-      default: point(this, x, y); break;
+      case 0:
+        this._point = 1;
+        this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y);
+        break;
+
+      case 1:
+        this._point = 2;
+        break;
+
+      case 2:
+        this._point = 3;
+      // falls through
+
+      default:
+        point(this, x, y);
+        break;
     }
 
     this._l01_a = this._l12_a, this._l12_a = this._l23_a;
@@ -74,15 +99,16 @@ CatmullRom.prototype = {
   }
 };
 
-export default (function custom(alpha) {
-
+var _default = function custom(alpha) {
   function catmullRom(context) {
-    return alpha ? new CatmullRom(context, alpha) : new Cardinal(context, 0);
+    return alpha ? new CatmullRom(context, alpha) : new _cardinal.Cardinal(context, 0);
   }
 
-  catmullRom.alpha = function(alpha) {
+  catmullRom.alpha = function (alpha) {
     return custom(+alpha);
   };
 
   return catmullRom;
-})(0.5);
+}(0.5);
+
+exports.default = _default;

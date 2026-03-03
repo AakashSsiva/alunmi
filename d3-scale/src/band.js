@@ -1,9 +1,21 @@
-import {range as sequence} from "d3-array";
-import {initRange} from "./init.js";
-import ordinal from "./ordinal.js";
+"use strict";
 
-export default function band() {
-  var scale = ordinal().unknown(undefined),
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = band;
+exports.point = point;
+
+var _index = require("../../../lib-vendor/d3-array/src/index.js");
+
+var _init = require("./init.js");
+
+var _ordinal = _interopRequireDefault(require("./ordinal.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function band() {
+  var scale = (0, _ordinal.default)().unknown(undefined),
       domain = scale.domain,
       ordinalRange = scale.range,
       r0 = 0,
@@ -14,7 +26,6 @@ export default function band() {
       paddingInner = 0,
       paddingOuter = 0,
       align = 0.5;
-
   delete scale.unknown;
 
   function rescale() {
@@ -27,75 +38,72 @@ export default function band() {
     start += (stop - start - step * (n - paddingInner)) * align;
     bandwidth = step * (1 - paddingInner);
     if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-    var values = sequence(n).map(function(i) { return start + step * i; });
+    var values = (0, _index.range)(n).map(function (i) {
+      return start + step * i;
+    });
     return ordinalRange(reverse ? values.reverse() : values);
   }
 
-  scale.domain = function(_) {
+  scale.domain = function (_) {
     return arguments.length ? (domain(_), rescale()) : domain();
   };
 
-  scale.range = function(_) {
+  scale.range = function (_) {
     return arguments.length ? ([r0, r1] = _, r0 = +r0, r1 = +r1, rescale()) : [r0, r1];
   };
 
-  scale.rangeRound = function(_) {
+  scale.rangeRound = function (_) {
     return [r0, r1] = _, r0 = +r0, r1 = +r1, round = true, rescale();
   };
 
-  scale.bandwidth = function() {
+  scale.bandwidth = function () {
     return bandwidth;
   };
 
-  scale.step = function() {
+  scale.step = function () {
     return step;
   };
 
-  scale.round = function(_) {
+  scale.round = function (_) {
     return arguments.length ? (round = !!_, rescale()) : round;
   };
 
-  scale.padding = function(_) {
+  scale.padding = function (_) {
     return arguments.length ? (paddingInner = Math.min(1, paddingOuter = +_), rescale()) : paddingInner;
   };
 
-  scale.paddingInner = function(_) {
+  scale.paddingInner = function (_) {
     return arguments.length ? (paddingInner = Math.min(1, _), rescale()) : paddingInner;
   };
 
-  scale.paddingOuter = function(_) {
+  scale.paddingOuter = function (_) {
     return arguments.length ? (paddingOuter = +_, rescale()) : paddingOuter;
   };
 
-  scale.align = function(_) {
+  scale.align = function (_) {
     return arguments.length ? (align = Math.max(0, Math.min(1, _)), rescale()) : align;
   };
 
-  scale.copy = function() {
-    return band(domain(), [r0, r1])
-        .round(round)
-        .paddingInner(paddingInner)
-        .paddingOuter(paddingOuter)
-        .align(align);
+  scale.copy = function () {
+    return band(domain(), [r0, r1]).round(round).paddingInner(paddingInner).paddingOuter(paddingOuter).align(align);
   };
 
-  return initRange.apply(rescale(), arguments);
+  return _init.initRange.apply(rescale(), arguments);
 }
 
 function pointish(scale) {
   var copy = scale.copy;
-
   scale.padding = scale.paddingOuter;
   delete scale.paddingInner;
   delete scale.paddingOuter;
 
-  scale.copy = function() {
+  scale.copy = function () {
     return pointish(copy());
   };
 
   return scale;
 }
 
-export function point() {
+function point() {
   return pointish(band.apply(null, arguments).paddingInner(1));
 }

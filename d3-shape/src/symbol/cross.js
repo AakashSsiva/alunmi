@@ -1,8 +1,15 @@
-import {sqrt} from "../math.js";
+"use strict";
 
-export default {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _math = require("../math.js");
+
+var _default = {
   draw(context, size) {
-    const r = sqrt(size / 5) / 2;
+    const r = (0, _math.sqrt)(size / 5) / 2;
     context.moveTo(-3 * r, -r);
     context.lineTo(-r, -r);
     context.lineTo(-r, -3 * r);
@@ -17,4 +24,6 @@ export default {
     context.lineTo(-3 * r, r);
     context.closePath();
   }
+
 };
+exports.default = _default;

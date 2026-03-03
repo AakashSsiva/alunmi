@@ -1,8 +1,22 @@
-import {ticks} from "d3-array";
-import {format, formatSpecifier} from "d3-format";
-import nice from "./nice.js";
-import {copy, transformer} from "./continuous.js";
-import {initRange} from "./init.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = log;
+exports.loggish = loggish;
+
+var _index = require("../../../lib-vendor/d3-array/src/index.js");
+
+var _index2 = require("../../../lib-vendor/d3-format/src/index.js");
+
+var _nice = _interopRequireDefault(require("./nice.js"));
+
+var _continuous = require("./continuous.js");
+
+var _init = require("./init.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function transformLog(x) {
   return Math.log(x);
@@ -25,23 +39,18 @@ function pow10(x) {
 }
 
 function powp(base) {
-  return base === 10 ? pow10
-      : base === Math.E ? Math.exp
-      : x => Math.pow(base, x);
+  return base === 10 ? pow10 : base === Math.E ? Math.exp : x => Math.pow(base, x);
 }
 
 function logp(base) {
-  return base === Math.E ? Math.log
-      : base === 10 && Math.log10
-      || base === 2 && Math.log2
-      || (base = Math.log(base), x => Math.log(x) / base);
+  return base === Math.E ? Math.log : base === 10 && Math.log10 || base === 2 && Math.log2 || (base = Math.log(base), x => Math.log(x) / base);
 }
 
 function reflect(f) {
   return (x, k) => -f(-x, k);
 }
 
-export function loggish(transform) {
+function loggish(transform) {
   const scale = transform(transformLog, transformExp);
   const domain = scale.domain;
   let base = 10;
@@ -50,20 +59,22 @@ export function loggish(transform) {
 
   function rescale() {
     logs = logp(base), pows = powp(base);
+
     if (domain()[0] < 0) {
       logs = reflect(logs), pows = reflect(pows);
       transform(transformLogn, transformExpn);
     } else {
       transform(transformLog, transformExp);
     }
+
     return scale;
   }
 
-  scale.base = function(_) {
+  scale.base = function (_) {
     return arguments.length ? (base = +_, rescale()) : base;
   };
 
-  scale.domain = function(_) {
+  scale.domain = function (_) {
     return arguments.length ? (domain(_), rescale()) : domain();
   };
 
@@ -72,9 +83,7 @@ export function loggish(transform) {
     let u = d[0];
     let v = d[d.length - 1];
     const r = v < u;
-
-    if (r) ([u, v] = [v, u]);
-
+    if (r) [u, v] = [v, u];
     let i = logs(u);
     let j = logs(v);
     let k;
@@ -99,22 +108,26 @@ export function loggish(transform) {
           z.push(t);
         }
       }
-      if (z.length * 2 < n) z = ticks(u, v, n);
+      if (z.length * 2 < n) z = (0, _index.ticks)(u, v, n);
     } else {
-      z = ticks(i, j, Math.min(j - i, n)).map(pows);
+      z = (0, _index.ticks)(i, j, Math.min(j - i, n)).map(pows);
     }
+
     return r ? z.reverse() : z;
   };
 
   scale.tickFormat = (count, specifier) => {
     if (count == null) count = 10;
     if (specifier == null) specifier = base === 10 ? "s" : ",";
+
     if (typeof specifier !== "function") {
-      if (!(base % 1) && (specifier = formatSpecifier(specifier)).precision == null) specifier.trim = true;
-      specifier = format(specifier);
+      if (!(base % 1) && (specifier = (0, _index2.formatSpecifier)(specifier)).precision == null) specifier.trim = true;
+      specifier = (0, _index2.format)(specifier);
     }
+
     if (count === Infinity) return specifier;
     const k = Math.max(1, base * count / scale.ticks().length); // TODO fast estimate?
+
     return d => {
       let i = d / pows(Math.round(logs(d)));
       if (i * base < base - 0.5) i *= base;
@@ -123,7 +136,7 @@ export function loggish(transform) {
   };
 
   scale.nice = () => {
-    return domain(nice(domain(), {
+    return domain((0, _nice.default)(domain(), {
       floor: x => pows(Math.floor(logs(x))),
       ceil: x => pows(Math.ceil(logs(x)))
     }));
@@ -132,9 +145,12 @@ export function loggish(transform) {
   return scale;
 }
 
-export default function log() {
-  const scale = loggish(transformer()).domain([1, 10]);
-  scale.copy = () => copy(scale, log()).base(scale.base());
-  initRange.apply(scale, arguments);
+function log() {
+  const scale = loggish((0, _continuous.transformer)()).domain([1, 10]);
+
+  scale.copy = () => (0, _continuous.copy)(scale, log()).base(scale.base());
+
+  _init.initRange.apply(scale, arguments);
+
   return scale;
 }

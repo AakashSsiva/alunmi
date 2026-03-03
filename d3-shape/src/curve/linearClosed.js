@@ -1,25 +1,33 @@
-import noop from "../noop.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+
+var _noop = _interopRequireDefault(require("../noop.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function LinearClosed(context) {
   this._context = context;
 }
 
 LinearClosed.prototype = {
-  areaStart: noop,
-  areaEnd: noop,
-  lineStart: function() {
+  areaStart: _noop.default,
+  areaEnd: _noop.default,
+  lineStart: function () {
     this._point = 0;
   },
-  lineEnd: function() {
+  lineEnd: function () {
     if (this._point) this._context.closePath();
   },
-  point: function(x, y) {
+  point: function (x, y) {
     x = +x, y = +y;
-    if (this._point) this._context.lineTo(x, y);
-    else this._point = 1, this._context.moveTo(x, y);
+    if (this._point) this._context.lineTo(x, y);else this._point = 1, this._context.moveTo(x, y);
   }
 };
 
-export default function(context) {
+function _default(context) {
   return new LinearClosed(context);
 }

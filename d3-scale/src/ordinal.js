@@ -1,46 +1,60 @@
-import {InternMap} from "d3-array";
-import {initRange} from "./init.js";
+"use strict";
 
-export const implicit = Symbol("implicit");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ordinal;
+exports.implicit = void 0;
 
-export default function ordinal() {
-  var index = new InternMap(),
+var _index = require("../../../lib-vendor/d3-array/src/index.js");
+
+var _init = require("./init.js");
+
+const implicit = Symbol("implicit");
+exports.implicit = implicit;
+
+function ordinal() {
+  var index = new _index.InternMap(),
       domain = [],
       range = [],
       unknown = implicit;
 
   function scale(d) {
     let i = index.get(d);
+
     if (i === undefined) {
       if (unknown !== implicit) return unknown;
       index.set(d, i = domain.push(d) - 1);
     }
+
     return range[i % range.length];
   }
 
-  scale.domain = function(_) {
+  scale.domain = function (_) {
     if (!arguments.length) return domain.slice();
-    domain = [], index = new InternMap();
+    domain = [], index = new _index.InternMap();
+
     for (const value of _) {
       if (index.has(value)) continue;
       index.set(value, domain.push(value) - 1);
     }
+
     return scale;
   };
 
-  scale.range = function(_) {
+  scale.range = function (_) {
     return arguments.length ? (range = Array.from(_), scale) : range.slice();
   };
 
-  scale.unknown = function(_) {
+  scale.unknown = function (_) {
     return arguments.length ? (unknown = _, scale) : unknown;
   };
 
-  scale.copy = function() {
+  scale.copy = function () {
     return ordinal(domain, range).unknown(unknown);
   };
 
-  initRange.apply(scale, arguments);
+  _init.initRange.apply(scale, arguments);
 
   return scale;
 }

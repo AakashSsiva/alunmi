@@ -1,6 +1,12 @@
-export default function nice(domain, interval) {
-  domain = domain.slice();
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = nice;
+
+function nice(domain, interval) {
+  domain = domain.slice();
   var i0 = 0,
       i1 = domain.length - 1,
       x0 = domain[i0],

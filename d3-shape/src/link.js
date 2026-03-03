@@ -1,8 +1,24 @@
-import {slice} from "./array.js";
-import constant from "./constant.js";
-import {bumpX, bumpY, bumpRadial} from "./curve/bump.js";
-import {withPath} from "./path.js";
-import {x as pointX, y as pointY} from "./point.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.link = link;
+exports.linkHorizontal = linkHorizontal;
+exports.linkRadial = linkRadial;
+exports.linkVertical = linkVertical;
+
+var _index = require("../../../lib-vendor/d3-path/src/index.js");
+
+var _array = require("./array.js");
+
+var _constant = _interopRequireDefault(require("./constant.js"));
+
+var _bump = require("./curve/bump.js");
+
+var _point = require("./point.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function linkSource(d) {
   return d.source;
@@ -12,21 +28,22 @@ function linkTarget(d) {
   return d.target;
 }
 
-export function link(curve) {
-  let source = linkSource,
-      target = linkTarget,
-      x = pointX,
-      y = pointY,
-      context = null,
-      output = null,
-      path = withPath(link);
+function link(curve) {
+  let source = linkSource;
+  let target = linkTarget;
+  let x = _point.x;
+  let y = _point.y;
+  let context = null;
+  let output = null;
 
   function link() {
     let buffer;
-    const argv = slice.call(arguments);
+
+    const argv = _array.slice.call(arguments);
+
     const s = source.apply(this, argv);
     const t = target.apply(this, argv);
-    if (context == null) output = curve(buffer = path());
+    if (context == null) output = curve(buffer = (0, _index.path)());
     output.lineStart();
     argv[0] = s, output.point(+x.apply(this, argv), +y.apply(this, argv));
     argv[0] = t, output.point(+x.apply(this, argv), +y.apply(this, argv));
@@ -34,39 +51,39 @@ export function link(curve) {
     if (buffer) return output = null, buffer + "" || null;
   }
 
-  link.source = function(_) {
+  link.source = function (_) {
     return arguments.length ? (source = _, link) : source;
   };
 
-  link.target = function(_) {
+  link.target = function (_) {
     return arguments.length ? (target = _, link) : target;
   };
 
-  link.x = function(_) {
-    return arguments.length ? (x = typeof _ === "function" ? _ : constant(+_), link) : x;
+  link.x = function (_) {
+    return arguments.length ? (x = typeof _ === "function" ? _ : (0, _constant.default)(+_), link) : x;
   };
 
-  link.y = function(_) {
-    return arguments.length ? (y = typeof _ === "function" ? _ : constant(+_), link) : y;
+  link.y = function (_) {
+    return arguments.length ? (y = typeof _ === "function" ? _ : (0, _constant.default)(+_), link) : y;
   };
 
-  link.context = function(_) {
+  link.context = function (_) {
     return arguments.length ? (_ == null ? context = output = null : output = curve(context = _), link) : context;
   };
 
   return link;
 }
 
-export function linkHorizontal() {
-  return link(bumpX);
+function linkHorizontal() {
+  return link(_bump.bumpX);
 }
 
-export function linkVertical() {
-  return link(bumpY);
+function linkVertical() {
+  return link(_bump.bumpY);
 }
 
-export function linkRadial() {
-  const l = link(bumpRadial);
+function linkRadial() {
+  const l = link(_bump.bumpRadial);
   l.angle = l.x, delete l.x;
   l.radius = l.y, delete l.y;
   return l;

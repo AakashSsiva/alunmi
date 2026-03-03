@@ -1,9 +1,20 @@
-import {linearish} from "./linear.js";
-import {copy, identity, transformer} from "./continuous.js";
-import {initRange} from "./init.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = pow;
+exports.powish = powish;
+exports.sqrt = sqrt;
+
+var _linear = require("./linear.js");
+
+var _continuous = require("./continuous.js");
+
+var _init = require("./init.js");
 
 function transformPow(exponent) {
-  return function(x) {
+  return function (x) {
     return x < 0 ? -Math.pow(-x, exponent) : Math.pow(x, exponent);
   };
 }
@@ -16,35 +27,33 @@ function transformSquare(x) {
   return x < 0 ? -x * x : x * x;
 }
 
-export function powish(transform) {
-  var scale = transform(identity, identity),
+function powish(transform) {
+  var scale = transform(_continuous.identity, _continuous.identity),
       exponent = 1;
 
   function rescale() {
-    return exponent === 1 ? transform(identity, identity)
-        : exponent === 0.5 ? transform(transformSqrt, transformSquare)
-        : transform(transformPow(exponent), transformPow(1 / exponent));
+    return exponent === 1 ? transform(_continuous.identity, _continuous.identity) : exponent === 0.5 ? transform(transformSqrt, transformSquare) : transform(transformPow(exponent), transformPow(1 / exponent));
   }
 
-  scale.exponent = function(_) {
+  scale.exponent = function (_) {
     return arguments.length ? (exponent = +_, rescale()) : exponent;
   };
 
-  return linearish(scale);
+  return (0, _linear.linearish)(scale);
 }
 
-export default function pow() {
-  var scale = powish(transformer());
+function pow() {
+  var scale = powish((0, _continuous.transformer)());
 
-  scale.copy = function() {
-    return copy(scale, pow()).exponent(scale.exponent());
+  scale.copy = function () {
+    return (0, _continuous.copy)(scale, pow()).exponent(scale.exponent());
   };
 
-  initRange.apply(scale, arguments);
+  _init.initRange.apply(scale, arguments);
 
   return scale;
 }
 
-export function sqrt() {
+function sqrt() {
   return pow.apply(null, arguments).exponent(0.5);
 }
