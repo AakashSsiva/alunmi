@@ -1,26 +1,26 @@
-import {timeInterval} from "./interval.js";
-import {durationMinute, durationSecond} from "./duration.js";
+"use strict";
 
-export const timeMinute = timeInterval((date) => {
-  date.setTime(date - date.getMilliseconds() - date.getSeconds() * durationSecond);
-}, (date, step) => {
-  date.setTime(+date + step * durationMinute);
-}, (start, end) => {
-  return (end - start) / durationMinute;
-}, (date) => {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.minutes = exports.default = void 0;
+
+var _interval = _interopRequireDefault(require("./interval.js"));
+
+var _duration = require("./duration.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var minute = (0, _interval.default)(function (date) {
+  date.setTime(date - date.getMilliseconds() - date.getSeconds() * _duration.durationSecond);
+}, function (date, step) {
+  date.setTime(+date + step * _duration.durationMinute);
+}, function (start, end) {
+  return (end - start) / _duration.durationMinute;
+}, function (date) {
   return date.getMinutes();
 });
-
-export const timeMinutes = timeMinute.range;
-
-export const utcMinute = timeInterval((date) => {
-  date.setUTCSeconds(0, 0);
-}, (date, step) => {
-  date.setTime(+date + step * durationMinute);
-}, (start, end) => {
-  return (end - start) / durationMinute;
-}, (date) => {
-  return date.getUTCMinutes();
-});
-
-export const utcMinutes = utcMinute.range;
+var _default = minute;
+exports.default = _default;
+var minutes = minute.range;
+exports.minutes = minutes;

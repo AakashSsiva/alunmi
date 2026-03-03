@@ -1,49 +1,36 @@
-import {timeInterval} from "./interval.js";
+"use strict";
 
-export const timeYear = timeInterval((date) => {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.years = exports.default = void 0;
+
+var _interval = _interopRequireDefault(require("./interval.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var year = (0, _interval.default)(function (date) {
   date.setMonth(0, 1);
   date.setHours(0, 0, 0, 0);
-}, (date, step) => {
+}, function (date, step) {
   date.setFullYear(date.getFullYear() + step);
-}, (start, end) => {
+}, function (start, end) {
   return end.getFullYear() - start.getFullYear();
-}, (date) => {
+}, function (date) {
   return date.getFullYear();
-});
+}); // An optimized implementation for this simple case.
 
-// An optimized implementation for this simple case.
-timeYear.every = (k) => {
-  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : timeInterval((date) => {
+year.every = function (k) {
+  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : (0, _interval.default)(function (date) {
     date.setFullYear(Math.floor(date.getFullYear() / k) * k);
     date.setMonth(0, 1);
     date.setHours(0, 0, 0, 0);
-  }, (date, step) => {
+  }, function (date, step) {
     date.setFullYear(date.getFullYear() + step * k);
   });
 };
 
-export const timeYears = timeYear.range;
-
-export const utcYear = timeInterval((date) => {
-  date.setUTCMonth(0, 1);
-  date.setUTCHours(0, 0, 0, 0);
-}, (date, step) => {
-  date.setUTCFullYear(date.getUTCFullYear() + step);
-}, (start, end) => {
-  return end.getUTCFullYear() - start.getUTCFullYear();
-}, (date) => {
-  return date.getUTCFullYear();
-});
-
-// An optimized implementation for this simple case.
-utcYear.every = (k) => {
-  return !isFinite(k = Math.floor(k)) || !(k > 0) ? null : timeInterval((date) => {
-    date.setUTCFullYear(Math.floor(date.getUTCFullYear() / k) * k);
-    date.setUTCMonth(0, 1);
-    date.setUTCHours(0, 0, 0, 0);
-  }, (date, step) => {
-    date.setUTCFullYear(date.getUTCFullYear() + step * k);
-  });
-};
-
-export const utcYears = utcYear.range;
+var _default = year;
+exports.default = _default;
+var years = year.range;
+exports.years = years;

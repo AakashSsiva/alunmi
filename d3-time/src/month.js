@@ -1,27 +1,25 @@
-import {timeInterval} from "./interval.js";
+"use strict";
 
-export const timeMonth = timeInterval((date) => {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.months = exports.default = void 0;
+
+var _interval = _interopRequireDefault(require("./interval.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var month = (0, _interval.default)(function (date) {
   date.setDate(1);
   date.setHours(0, 0, 0, 0);
-}, (date, step) => {
+}, function (date, step) {
   date.setMonth(date.getMonth() + step);
-}, (start, end) => {
+}, function (start, end) {
   return end.getMonth() - start.getMonth() + (end.getFullYear() - start.getFullYear()) * 12;
-}, (date) => {
+}, function (date) {
   return date.getMonth();
 });
-
-export const timeMonths = timeMonth.range;
-
-export const utcMonth = timeInterval((date) => {
-  date.setUTCDate(1);
-  date.setUTCHours(0, 0, 0, 0);
-}, (date, step) => {
-  date.setUTCMonth(date.getUTCMonth() + step);
-}, (start, end) => {
-  return end.getUTCMonth() - start.getUTCMonth() + (end.getUTCFullYear() - start.getUTCFullYear()) * 12;
-}, (date) => {
-  return date.getUTCMonth();
-});
-
-export const utcMonths = utcMonth.range;
+var _default = month;
+exports.default = _default;
+var months = month.range;
+exports.months = months;

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.seconds = exports.default = void 0;
+exports.utcHours = exports.default = void 0;
 
 var _interval = _interopRequireDefault(require("./interval.js"));
 
@@ -11,16 +11,16 @@ var _duration = require("./duration.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var second = (0, _interval.default)(function (date) {
-  date.setTime(date - date.getMilliseconds());
+var utcHour = (0, _interval.default)(function (date) {
+  date.setUTCMinutes(0, 0, 0);
 }, function (date, step) {
-  date.setTime(+date + step * _duration.durationSecond);
+  date.setTime(+date + step * _duration.durationHour);
 }, function (start, end) {
-  return (end - start) / _duration.durationSecond;
+  return (end - start) / _duration.durationHour;
 }, function (date) {
-  return date.getUTCSeconds();
+  return date.getUTCHours();
 });
-var _default = second;
+var _default = utcHour;
 exports.default = _default;
-var seconds = second.range;
-exports.seconds = seconds;
+var utcHours = utcHour.range;
+exports.utcHours = utcHours;

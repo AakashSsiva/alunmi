@@ -1,11 +1,24 @@
-import formatLocale from "./locale.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = defaultLocale;
+exports.utcParse = exports.utcFormat = exports.timeParse = exports.timeFormat = void 0;
+
+var _locale = _interopRequireDefault(require("./locale.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var locale;
-export var timeFormat;
-export var timeParse;
-export var utcFormat;
-export var utcParse;
-
+var timeFormat;
+exports.timeFormat = timeFormat;
+var timeParse;
+exports.timeParse = timeParse;
+var utcFormat;
+exports.utcFormat = utcFormat;
+var utcParse;
+exports.utcParse = utcParse;
 defaultLocale({
   dateTime: "%x, %X",
   date: "%-m/%-d/%Y",
@@ -17,11 +30,11 @@ defaultLocale({
   shortMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 });
 
-export default function defaultLocale(definition) {
-  locale = formatLocale(definition);
-  timeFormat = locale.format;
-  timeParse = locale.parse;
-  utcFormat = locale.utcFormat;
-  utcParse = locale.utcParse;
+function defaultLocale(definition) {
+  locale = (0, _locale.default)(definition);
+  exports.timeFormat = timeFormat = locale.format;
+  exports.timeParse = timeParse = locale.parse;
+  exports.utcFormat = utcFormat = locale.utcFormat;
+  exports.utcParse = utcParse = locale.utcParse;
   return locale;
 }

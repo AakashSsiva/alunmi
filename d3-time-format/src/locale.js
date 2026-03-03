@@ -1,15 +1,11 @@
-import {
-  timeDay,
-  timeSunday,
-  timeMonday,
-  timeThursday,
-  timeYear,
-  utcDay,
-  utcSunday,
-  utcMonday,
-  utcThursday,
-  utcYear
-} from "d3-time";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = formatLocale;
+
+var _index = require("../../../lib-vendor/d3-time/src/index.js");
 
 function localDate(d) {
   if (0 <= d.y && d.y < 100) {
@@ -17,6 +13,7 @@ function localDate(d) {
     date.setFullYear(d.y);
     return date;
   }
+
   return new Date(d.y, d.m, d.d, d.H, d.M, d.S, d.L);
 }
 
@@ -26,14 +23,23 @@ function utcDate(d) {
     date.setUTCFullYear(d.y);
     return date;
   }
+
   return new Date(Date.UTC(d.y, d.m, d.d, d.H, d.M, d.S, d.L));
 }
 
 function newDate(y, m, d) {
-  return {y: y, m: m, d: d, H: 0, M: 0, S: 0, L: 0};
+  return {
+    y: y,
+    m: m,
+    d: d,
+    H: 0,
+    M: 0,
+    S: 0,
+    L: 0
+  };
 }
 
-export default function formatLocale(locale) {
+function formatLocale(locale) {
   var locale_dateTime = locale.dateTime,
       locale_date = locale.date,
       locale_time = locale.time,
@@ -42,7 +48,6 @@ export default function formatLocale(locale) {
       locale_shortWeekdays = locale.shortDays,
       locale_months = locale.months,
       locale_shortMonths = locale.shortMonths;
-
   var periodRe = formatRe(locale_periods),
       periodLookup = formatLookup(locale_periods),
       weekdayRe = formatRe(locale_weekdays),
@@ -53,7 +58,6 @@ export default function formatLocale(locale) {
       monthLookup = formatLookup(locale_months),
       shortMonthRe = formatRe(locale_shortMonths),
       shortMonthLookup = formatLookup(locale_shortMonths);
-
   var formats = {
     "a": formatShortWeekday,
     "A": formatWeekday,
@@ -88,7 +92,6 @@ export default function formatLocale(locale) {
     "Z": formatZone,
     "%": formatLiteralPercent
   };
-
   var utcFormats = {
     "a": formatUTCShortWeekday,
     "A": formatUTCWeekday,
@@ -123,7 +126,6 @@ export default function formatLocale(locale) {
     "Z": formatUTCZone,
     "%": formatLiteralPercent
   };
-
   var parses = {
     "a": parseShortWeekday,
     "A": parseWeekday,
@@ -157,9 +159,8 @@ export default function formatLocale(locale) {
     "Y": parseFullYear,
     "Z": parseZone,
     "%": parseLiteralPercent
-  };
+  }; // These recursive directive definitions must be deferred.
 
-  // These recursive directive definitions must be deferred.
   formats.x = newFormat(locale_date, formats);
   formats.X = newFormat(locale_time, formats);
   formats.c = newFormat(locale_dateTime, formats);
@@ -168,7 +169,7 @@ export default function formatLocale(locale) {
   utcFormats.c = newFormat(locale_dateTime, utcFormats);
 
   function newFormat(specifier, formats) {
-    return function(date) {
+    return function (date) {
       var string = [],
           i = -1,
           j = 0,
@@ -176,14 +177,12 @@ export default function formatLocale(locale) {
           c,
           pad,
           format;
-
       if (!(date instanceof Date)) date = new Date(+date);
 
       while (++i < n) {
         if (specifier.charCodeAt(i) === 37) {
           string.push(specifier.slice(j, i));
-          if ((pad = pads[c = specifier.charAt(++i)]) != null) c = specifier.charAt(++i);
-          else pad = c === "e" ? " " : "0";
+          if ((pad = pads[c = specifier.charAt(++i)]) != null) c = specifier.charAt(++i);else pad = c === "e" ? " " : "0";
           if (format = formats[c]) c = format(date, pad);
           string.push(c);
           j = i + 1;
@@ -196,40 +195,37 @@ export default function formatLocale(locale) {
   }
 
   function newParse(specifier, Z) {
-    return function(string) {
+    return function (string) {
       var d = newDate(1900, undefined, 1),
           i = parseSpecifier(d, specifier, string += "", 0),
-          week, day;
-      if (i != string.length) return null;
+          week,
+          day;
+      if (i != string.length) return null; // If a UNIX timestamp is specified, return it.
 
-      // If a UNIX timestamp is specified, return it.
       if ("Q" in d) return new Date(d.Q);
-      if ("s" in d) return new Date(d.s * 1000 + ("L" in d ? d.L : 0));
+      if ("s" in d) return new Date(d.s * 1000 + ("L" in d ? d.L : 0)); // If this is utcParse, never use the local timezone.
 
-      // If this is utcParse, never use the local timezone.
-      if (Z && !("Z" in d)) d.Z = 0;
+      if (Z && !("Z" in d)) d.Z = 0; // The am-pm flag is 0 for AM, and 1 for PM.
 
-      // The am-pm flag is 0 for AM, and 1 for PM.
-      if ("p" in d) d.H = d.H % 12 + d.p * 12;
+      if ("p" in d) d.H = d.H % 12 + d.p * 12; // If the month was not specified, inherit from the quarter.
 
-      // If the month was not specified, inherit from the quarter.
-      if (d.m === undefined) d.m = "q" in d ? d.q : 0;
+      if (d.m === undefined) d.m = "q" in d ? d.q : 0; // Convert day-of-week and week-of-year to day-of-year.
 
-      // Convert day-of-week and week-of-year to day-of-year.
       if ("V" in d) {
         if (d.V < 1 || d.V > 53) return null;
         if (!("w" in d)) d.w = 1;
+
         if ("Z" in d) {
           week = utcDate(newDate(d.y, 0, 1)), day = week.getUTCDay();
-          week = day > 4 || day === 0 ? utcMonday.ceil(week) : utcMonday(week);
-          week = utcDay.offset(week, (d.V - 1) * 7);
+          week = day > 4 || day === 0 ? _index.utcMonday.ceil(week) : (0, _index.utcMonday)(week);
+          week = _index.utcDay.offset(week, (d.V - 1) * 7);
           d.y = week.getUTCFullYear();
           d.m = week.getUTCMonth();
           d.d = week.getUTCDate() + (d.w + 6) % 7;
         } else {
           week = localDate(newDate(d.y, 0, 1)), day = week.getDay();
-          week = day > 4 || day === 0 ? timeMonday.ceil(week) : timeMonday(week);
-          week = timeDay.offset(week, (d.V - 1) * 7);
+          week = day > 4 || day === 0 ? _index.timeMonday.ceil(week) : (0, _index.timeMonday)(week);
+          week = _index.timeDay.offset(week, (d.V - 1) * 7);
           d.y = week.getFullYear();
           d.m = week.getMonth();
           d.d = week.getDate() + (d.w + 6) % 7;
@@ -239,17 +235,17 @@ export default function formatLocale(locale) {
         day = "Z" in d ? utcDate(newDate(d.y, 0, 1)).getUTCDay() : localDate(newDate(d.y, 0, 1)).getDay();
         d.m = 0;
         d.d = "W" in d ? (d.w + 6) % 7 + d.W * 7 - (day + 5) % 7 : d.w + d.U * 7 - (day + 6) % 7;
-      }
-
-      // If a time zone is specified, all fields are interpreted as UTC and then
+      } // If a time zone is specified, all fields are interpreted as UTC and then
       // offset according to the specified time zone.
+
+
       if ("Z" in d) {
         d.H += d.Z / 100 | 0;
         d.M += d.Z % 100;
         return utcDate(d);
-      }
+      } // Otherwise, all fields are in local time.
 
-      // Otherwise, all fields are in local time.
+
       return localDate(d);
     };
   }
@@ -264,10 +260,11 @@ export default function formatLocale(locale) {
     while (i < n) {
       if (j >= m) return -1;
       c = specifier.charCodeAt(i++);
+
       if (c === 37) {
         c = specifier.charAt(i++);
         parse = parses[c in pads ? specifier.charAt(i++) : c];
-        if (!parse || ((j = parse(d, string, j)) < 0)) return -1;
+        if (!parse || (j = parse(d, string, j)) < 0) return -1;
       } else if (c != string.charCodeAt(j++)) {
         return -1;
       }
@@ -362,32 +359,53 @@ export default function formatLocale(locale) {
   }
 
   return {
-    format: function(specifier) {
+    format: function (specifier) {
       var f = newFormat(specifier += "", formats);
-      f.toString = function() { return specifier; };
+
+      f.toString = function () {
+        return specifier;
+      };
+
       return f;
     },
-    parse: function(specifier) {
+    parse: function (specifier) {
       var p = newParse(specifier += "", false);
-      p.toString = function() { return specifier; };
+
+      p.toString = function () {
+        return specifier;
+      };
+
       return p;
     },
-    utcFormat: function(specifier) {
+    utcFormat: function (specifier) {
       var f = newFormat(specifier += "", utcFormats);
-      f.toString = function() { return specifier; };
+
+      f.toString = function () {
+        return specifier;
+      };
+
       return f;
     },
-    utcParse: function(specifier) {
+    utcParse: function (specifier) {
       var p = newParse(specifier += "", true);
-      p.toString = function() { return specifier; };
+
+      p.toString = function () {
+        return specifier;
+      };
+
       return p;
     }
   };
 }
 
-var pads = {"-": "", "_": " ", "0": "0"},
-    numberRe = /^\s*\d+/, // note: ignores next directive
-    percentRe = /^%/,
+var pads = {
+  "-": "",
+  "_": " ",
+  "0": "0"
+},
+    numberRe = /^\s*\d+/,
+    // note: ignores next directive
+percentRe = /^%/,
     requoteRe = /[\\^$*+?|[\]().{}]/g;
 
 function pad(value, fill, width) {
@@ -522,7 +540,7 @@ function formatHour12(d, p) {
 }
 
 function formatDayOfYear(d, p) {
-  return pad(1 + timeDay.count(timeYear(d), d), p, 3);
+  return pad(1 + _index.timeDay.count((0, _index.timeYear)(d), d), p, 3);
 }
 
 function formatMilliseconds(d, p) {
@@ -551,17 +569,17 @@ function formatWeekdayNumberMonday(d) {
 }
 
 function formatWeekNumberSunday(d, p) {
-  return pad(timeSunday.count(timeYear(d) - 1, d), p, 2);
+  return pad(_index.timeSunday.count((0, _index.timeYear)(d) - 1, d), p, 2);
 }
 
 function dISO(d) {
   var day = d.getDay();
-  return (day >= 4 || day === 0) ? timeThursday(d) : timeThursday.ceil(d);
+  return day >= 4 || day === 0 ? (0, _index.timeThursday)(d) : _index.timeThursday.ceil(d);
 }
 
 function formatWeekNumberISO(d, p) {
   d = dISO(d);
-  return pad(timeThursday.count(timeYear(d), d) + (timeYear(d).getDay() === 4), p, 2);
+  return pad(_index.timeThursday.count((0, _index.timeYear)(d), d) + ((0, _index.timeYear)(d).getDay() === 4), p, 2);
 }
 
 function formatWeekdayNumberSunday(d) {
@@ -569,7 +587,7 @@ function formatWeekdayNumberSunday(d) {
 }
 
 function formatWeekNumberMonday(d, p) {
-  return pad(timeMonday.count(timeYear(d) - 1, d), p, 2);
+  return pad(_index.timeMonday.count((0, _index.timeYear)(d) - 1, d), p, 2);
 }
 
 function formatYear(d, p) {
@@ -587,15 +605,13 @@ function formatFullYear(d, p) {
 
 function formatFullYearISO(d, p) {
   var day = d.getDay();
-  d = (day >= 4 || day === 0) ? timeThursday(d) : timeThursday.ceil(d);
+  d = day >= 4 || day === 0 ? (0, _index.timeThursday)(d) : _index.timeThursday.ceil(d);
   return pad(d.getFullYear() % 10000, p, 4);
 }
 
 function formatZone(d) {
   var z = d.getTimezoneOffset();
-  return (z > 0 ? "-" : (z *= -1, "+"))
-      + pad(z / 60 | 0, "0", 2)
-      + pad(z % 60, "0", 2);
+  return (z > 0 ? "-" : (z *= -1, "+")) + pad(z / 60 | 0, "0", 2) + pad(z % 60, "0", 2);
 }
 
 function formatUTCDayOfMonth(d, p) {
@@ -611,7 +627,7 @@ function formatUTCHour12(d, p) {
 }
 
 function formatUTCDayOfYear(d, p) {
-  return pad(1 + utcDay.count(utcYear(d), d), p, 3);
+  return pad(1 + _index.utcDay.count((0, _index.utcYear)(d), d), p, 3);
 }
 
 function formatUTCMilliseconds(d, p) {
@@ -640,17 +656,17 @@ function formatUTCWeekdayNumberMonday(d) {
 }
 
 function formatUTCWeekNumberSunday(d, p) {
-  return pad(utcSunday.count(utcYear(d) - 1, d), p, 2);
+  return pad(_index.utcSunday.count((0, _index.utcYear)(d) - 1, d), p, 2);
 }
 
 function UTCdISO(d) {
   var day = d.getUTCDay();
-  return (day >= 4 || day === 0) ? utcThursday(d) : utcThursday.ceil(d);
+  return day >= 4 || day === 0 ? (0, _index.utcThursday)(d) : _index.utcThursday.ceil(d);
 }
 
 function formatUTCWeekNumberISO(d, p) {
   d = UTCdISO(d);
-  return pad(utcThursday.count(utcYear(d), d) + (utcYear(d).getUTCDay() === 4), p, 2);
+  return pad(_index.utcThursday.count((0, _index.utcYear)(d), d) + ((0, _index.utcYear)(d).getUTCDay() === 4), p, 2);
 }
 
 function formatUTCWeekdayNumberSunday(d) {
@@ -658,7 +674,7 @@ function formatUTCWeekdayNumberSunday(d) {
 }
 
 function formatUTCWeekNumberMonday(d, p) {
-  return pad(utcMonday.count(utcYear(d) - 1, d), p, 2);
+  return pad(_index.utcMonday.count((0, _index.utcYear)(d) - 1, d), p, 2);
 }
 
 function formatUTCYear(d, p) {
@@ -676,7 +692,7 @@ function formatUTCFullYear(d, p) {
 
 function formatUTCFullYearISO(d, p) {
   var day = d.getUTCDay();
-  d = (day >= 4 || day === 0) ? utcThursday(d) : utcThursday.ceil(d);
+  d = day >= 4 || day === 0 ? (0, _index.utcThursday)(d) : _index.utcThursday.ceil(d);
   return pad(d.getUTCFullYear() % 10000, p, 4);
 }
 
