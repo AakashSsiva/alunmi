@@ -1,133 +1,92 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _CJSImportProcessor = require('./CJSImportProcessor'); var _CJSImportProcessor2 = _interopRequireDefault(_CJSImportProcessor);
-var _computeSourceMap = require('./computeSourceMap'); var _computeSourceMap2 = _interopRequireDefault(_computeSourceMap);
-var _HelperManager = require('./HelperManager');
-var _identifyShadowedGlobals = require('./identifyShadowedGlobals'); var _identifyShadowedGlobals2 = _interopRequireDefault(_identifyShadowedGlobals);
-var _NameManager = require('./NameManager'); var _NameManager2 = _interopRequireDefault(_NameManager);
-var _Options = require('./Options');
-
-var _parser = require('./parser');
-
-var _TokenProcessor = require('./TokenProcessor'); var _TokenProcessor2 = _interopRequireDefault(_TokenProcessor);
-var _RootTransformer = require('./transformers/RootTransformer'); var _RootTransformer2 = _interopRequireDefault(_RootTransformer);
-var _formatTokens = require('./util/formatTokens'); var _formatTokens2 = _interopRequireDefault(_formatTokens);
-var _getTSImportedNames = require('./util/getTSImportedNames'); var _getTSImportedNames2 = _interopRequireDefault(_getTSImportedNames);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;
-
- function getVersion() {
-  /* istanbul ignore next */
-  return "3.35.1";
-} exports.getVersion = getVersion;
-
- function transform(code, options) {
-  _Options.validateOptions.call(void 0, options);
-  try {
-    const sucraseContext = getSucraseContext(code, options);
-    const transformer = new (0, _RootTransformer2.default)(
-      sucraseContext,
-      options.transforms,
-      Boolean(options.enableLegacyBabel5ModuleInterop),
-      options,
-    );
-    const transformerResult = transformer.transform();
-    let result = {code: transformerResult.code};
-    if (options.sourceMapOptions) {
-      if (!options.filePath) {
-        throw new Error("filePath must be specified when generating a source map.");
-      }
-      result = {
-        ...result,
-        sourceMap: _computeSourceMap2.default.call(void 0, 
-          transformerResult,
-          options.filePath,
-          options.sourceMapOptions,
-          code,
-          sucraseContext.tokenProcessor.tokens,
-        ),
-      };
-    }
-    return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e) {
-    if (options.filePath) {
-      e.message = `Error transforming ${options.filePath}: ${e.message}`;
-    }
-    throw e;
-  }
-} exports.transform = transform;
-
-/**
- * Return a string representation of the sucrase tokens, mostly useful for
- * diagnostic purposes.
- */
- function getFormattedTokens(code, options) {
-  const tokens = getSucraseContext(code, options).tokenProcessor.tokens;
-  return _formatTokens2.default.call(void 0, code, tokens);
-} exports.getFormattedTokens = getFormattedTokens;
-
-/**
- * Call into the parser/tokenizer and do some further preprocessing:
- * - Come up with a set of used names so that we can assign new names.
- * - Preprocess all import/export statements so we know which globals we are interested in.
- * - Compute situations where any of those globals are shadowed.
- *
- * In the future, some of these preprocessing steps can be skipped based on what actual work is
- * being done.
- */
-function getSucraseContext(code, options) {
-  const isJSXEnabled = options.transforms.includes("jsx");
-  const isTypeScriptEnabled = options.transforms.includes("typescript");
-  const isFlowEnabled = options.transforms.includes("flow");
-  const disableESTransforms = options.disableESTransforms === true;
-  const file = _parser.parse.call(void 0, code, isJSXEnabled, isTypeScriptEnabled, isFlowEnabled);
-  const tokens = file.tokens;
-  const scopes = file.scopes;
-
-  const nameManager = new (0, _NameManager2.default)(code, tokens);
-  const helperManager = new (0, _HelperManager.HelperManager)(nameManager);
-  const tokenProcessor = new (0, _TokenProcessor2.default)(
-    code,
-    tokens,
-    isFlowEnabled,
-    disableESTransforms,
-    helperManager,
-  );
-  const enableLegacyTypeScriptModuleInterop = Boolean(options.enableLegacyTypeScriptModuleInterop);
-
-  let importProcessor = null;
-  if (options.transforms.includes("imports")) {
-    importProcessor = new (0, _CJSImportProcessor2.default)(
-      nameManager,
-      tokenProcessor,
-      enableLegacyTypeScriptModuleInterop,
-      options,
-      options.transforms.includes("typescript"),
-      Boolean(options.keepUnusedImports),
-      helperManager,
-    );
-    importProcessor.preprocessTokens();
-    // We need to mark shadowed globals after processing imports so we know that the globals are,
-    // but before type-only import pruning, since that relies on shadowing information.
-    _identifyShadowedGlobals2.default.call(void 0, tokenProcessor, scopes, importProcessor.getGlobalNames());
-    if (options.transforms.includes("typescript") && !options.keepUnusedImports) {
-      importProcessor.pruneTypeOnlyImports();
-    }
-  } else if (options.transforms.includes("typescript") && !options.keepUnusedImports) {
-    // Shadowed global detection is needed for TS implicit elision of imported names.
-    _identifyShadowedGlobals2.default.call(void 0, tokenProcessor, scopes, _getTSImportedNames2.default.call(void 0, tokenProcessor));
-  }
-  return {tokenProcessor, scopes, nameManager, importProcessor, helperManager};
-}
+import activeElement from './activeElement';
+import addClass from './addClass';
+import addEventListener from './addEventListener';
+import animate from './animate';
+import { cancel as cancelAnimationFrame, request as requestAnimationFrame } from './animationFrame';
+import attribute from './attribute';
+import childElements from './childElements';
+import clear from './clear';
+import closest from './closest';
+import contains from './contains';
+import childNodes from './childNodes';
+import style from './css';
+import filter from './filterEventHandler';
+import getComputedStyle from './getComputedStyle';
+import hasClass from './hasClass';
+import height from './height';
+import insertAfter from './insertAfter';
+import isInput from './isInput';
+import isVisible from './isVisible';
+import listen from './listen';
+import matches from './matches';
+import nextUntil from './nextUntil';
+import offset from './offset';
+import offsetParent from './offsetParent';
+import ownerDocument from './ownerDocument';
+import ownerWindow from './ownerWindow';
+import parents from './parents';
+import position from './position';
+import prepend from './prepend';
+import querySelectorAll from './querySelectorAll';
+import remove from './remove';
+import removeClass from './removeClass';
+import removeEventListener from './removeEventListener';
+import scrollbarSize from './scrollbarSize';
+import scrollLeft from './scrollLeft';
+import scrollParent from './scrollParent';
+import scrollTo from './scrollTo';
+import scrollTop from './scrollTop';
+import siblings from './siblings';
+import text from './text';
+import toggleClass from './toggleClass';
+import transitionEnd from './transitionEnd';
+import triggerEvent from './triggerEvent';
+import width from './width';
+export { addEventListener, removeEventListener, triggerEvent, animate, filter, listen, style, getComputedStyle, attribute, activeElement, ownerDocument, ownerWindow, requestAnimationFrame, cancelAnimationFrame, matches, height, width, offset, offsetParent, position, contains, scrollbarSize, scrollLeft, scrollParent, scrollTo, scrollTop, querySelectorAll, closest, addClass, removeClass, hasClass, toggleClass, transitionEnd, childNodes, childElements, nextUntil, parents, siblings, clear, insertAfter, isInput, isVisible, prepend, remove, text };
+export default {
+  addEventListener: addEventListener,
+  removeEventListener: removeEventListener,
+  triggerEvent: triggerEvent,
+  animate: animate,
+  filter: filter,
+  listen: listen,
+  style: style,
+  getComputedStyle: getComputedStyle,
+  attribute: attribute,
+  activeElement: activeElement,
+  ownerDocument: ownerDocument,
+  ownerWindow: ownerWindow,
+  requestAnimationFrame: requestAnimationFrame,
+  cancelAnimationFrame: cancelAnimationFrame,
+  matches: matches,
+  height: height,
+  width: width,
+  offset: offset,
+  offsetParent: offsetParent,
+  position: position,
+  contains: contains,
+  scrollbarSize: scrollbarSize,
+  scrollLeft: scrollLeft,
+  scrollParent: scrollParent,
+  scrollTo: scrollTo,
+  scrollTop: scrollTop,
+  querySelectorAll: querySelectorAll,
+  closest: closest,
+  addClass: addClass,
+  removeClass: removeClass,
+  hasClass: hasClass,
+  toggleClass: toggleClass,
+  transitionEnd: transitionEnd,
+  childNodes: childNodes,
+  childElements: childElements,
+  nextUntil: nextUntil,
+  parents: parents,
+  siblings: siblings,
+  clear: clear,
+  insertAfter: insertAfter,
+  isInput: isInput,
+  isVisible: isVisible,
+  prepend: prepend,
+  remove: remove,
+  text: text
+};
