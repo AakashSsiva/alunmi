@@ -1,5 +1,12 @@
-export default function(grouping, thousands) {
-  return function(value, width) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+
+function _default(grouping, thousands) {
+  return function (value, width) {
     var i = value.length,
         t = [],
         j = 0,

@@ -1,6 +1,12 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.backOut = exports.backInOut = exports.backIn = void 0;
 var overshoot = 1.70158;
 
-export var backIn = (function custom(s) {
+var backIn = function custom(s) {
   s = +s;
 
   function backIn(t) {
@@ -8,11 +14,12 @@ export var backIn = (function custom(s) {
   }
 
   backIn.overshoot = custom;
-
   return backIn;
-})(overshoot);
+}(overshoot);
 
-export var backOut = (function custom(s) {
+exports.backIn = backIn;
+
+var backOut = function custom(s) {
   s = +s;
 
   function backOut(t) {
@@ -20,11 +27,12 @@ export var backOut = (function custom(s) {
   }
 
   backOut.overshoot = custom;
-
   return backOut;
-})(overshoot);
+}(overshoot);
 
-export var backInOut = (function custom(s) {
+exports.backOut = backOut;
+
+var backInOut = function custom(s) {
   s = +s;
 
   function backInOut(t) {
@@ -32,6 +40,7 @@ export var backInOut = (function custom(s) {
   }
 
   backInOut.overshoot = custom;
-
   return backInOut;
-})(overshoot);
+}(overshoot);
+
+exports.backInOut = backInOut;

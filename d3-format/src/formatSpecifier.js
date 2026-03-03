@@ -1,7 +1,14 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FormatSpecifier = FormatSpecifier;
+exports.default = formatSpecifier;
 // [[fill]align][sign][symbol][0][width][,][.precision][~][type]
 var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
 
-export default function formatSpecifier(specifier) {
+function formatSpecifier(specifier) {
   if (!(match = re.exec(specifier))) throw new Error("invalid format: " + specifier);
   var match;
   return new FormatSpecifier({
@@ -20,7 +27,7 @@ export default function formatSpecifier(specifier) {
 
 formatSpecifier.prototype = FormatSpecifier.prototype; // instanceof
 
-export function FormatSpecifier(specifier) {
+function FormatSpecifier(specifier) {
   this.fill = specifier.fill === undefined ? " " : specifier.fill + "";
   this.align = specifier.align === undefined ? ">" : specifier.align + "";
   this.sign = specifier.sign === undefined ? "-" : specifier.sign + "";
@@ -33,15 +40,6 @@ export function FormatSpecifier(specifier) {
   this.type = specifier.type === undefined ? "" : specifier.type + "";
 }
 
-FormatSpecifier.prototype.toString = function() {
-  return this.fill
-      + this.align
-      + this.sign
-      + this.symbol
-      + (this.zero ? "0" : "")
-      + (this.width === undefined ? "" : Math.max(1, this.width | 0))
-      + (this.comma ? "," : "")
-      + (this.precision === undefined ? "" : "." + Math.max(0, this.precision | 0))
-      + (this.trim ? "~" : "")
-      + this.type;
+FormatSpecifier.prototype.toString = function () {
+  return this.fill + this.align + this.sign + this.symbol + (this.zero ? "0" : "") + (this.width === undefined ? "" : Math.max(1, this.width | 0)) + (this.comma ? "," : "") + (this.precision === undefined ? "" : "." + Math.max(0, this.precision | 0)) + (this.trim ? "~" : "") + this.type;
 };

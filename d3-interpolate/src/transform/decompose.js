@@ -1,6 +1,12 @@
-var degrees = 180 / Math.PI;
+"use strict";
 
-export var identity = {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+exports.identity = void 0;
+var degrees = 180 / Math.PI;
+var identity = {
   translateX: 0,
   translateY: 0,
   rotate: 0,
@@ -8,8 +14,9 @@ export var identity = {
   scaleX: 1,
   scaleY: 1
 };
+exports.identity = identity;
 
-export default function(a, b, c, d, e, f) {
+function _default(a, b, c, d, e, f) {
   var scaleX, scaleY, skewX;
   if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
   if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;

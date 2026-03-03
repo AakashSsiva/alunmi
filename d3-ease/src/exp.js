@@ -1,13 +1,22 @@
-import {tpmt} from "./math.js";
+"use strict";
 
-export function expIn(t) {
-  return tpmt(1 - +t);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.expIn = expIn;
+exports.expInOut = expInOut;
+exports.expOut = expOut;
+
+var _math = require("./math.js");
+
+function expIn(t) {
+  return (0, _math.tpmt)(1 - +t);
 }
 
-export function expOut(t) {
-  return 1 - tpmt(t);
+function expOut(t) {
+  return 1 - (0, _math.tpmt)(t);
 }
 
-export function expInOut(t) {
-  return ((t *= 2) <= 1 ? tpmt(1 - t) : 2 - tpmt(t - 1)) / 2;
+function expInOut(t) {
+  return ((t *= 2) <= 1 ? (0, _math.tpmt)(1 - t) : 2 - (0, _math.tpmt)(t - 1)) / 2;
 }

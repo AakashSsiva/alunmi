@@ -1,10 +1,20 @@
-export default function(constructor, factory, prototype) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+exports.extend = extend;
+
+function _default(constructor, factory, prototype) {
   constructor.prototype = factory.prototype = prototype;
   prototype.constructor = constructor;
 }
 
-export function extend(parent, definition) {
+function extend(parent, definition) {
   var prototype = Object.create(parent.prototype);
+
   for (var key in definition) prototype[key] = definition[key];
+
   return prototype;
 }

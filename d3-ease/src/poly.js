@@ -1,6 +1,12 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.polyOut = exports.polyInOut = exports.polyIn = void 0;
 var exponent = 3;
 
-export var polyIn = (function custom(e) {
+var polyIn = function custom(e) {
   e = +e;
 
   function polyIn(t) {
@@ -8,11 +14,12 @@ export var polyIn = (function custom(e) {
   }
 
   polyIn.exponent = custom;
-
   return polyIn;
-})(exponent);
+}(exponent);
 
-export var polyOut = (function custom(e) {
+exports.polyIn = polyIn;
+
+var polyOut = function custom(e) {
   e = +e;
 
   function polyOut(t) {
@@ -20,11 +27,12 @@ export var polyOut = (function custom(e) {
   }
 
   polyOut.exponent = custom;
-
   return polyOut;
-})(exponent);
+}(exponent);
 
-export var polyInOut = (function custom(e) {
+exports.polyOut = polyOut;
+
+var polyInOut = function custom(e) {
   e = +e;
 
   function polyInOut(t) {
@@ -32,6 +40,7 @@ export var polyInOut = (function custom(e) {
   }
 
   polyInOut.exponent = custom;
-
   return polyInOut;
-})(exponent);
+}(exponent);
+
+exports.polyInOut = polyInOut;
