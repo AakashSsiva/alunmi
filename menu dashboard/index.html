@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilevel Vertical Dropdown - Wide Spacing with Logo (Revised)</title>
+    <link rel="icon" type="image/jpeg" href="/images.jpeg" />
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Define primary colors */
+        :root {
+            --primary-blue: #1a237e;      /* Deep Navy Blue (Header background) */
+            --accent-orange: #f9a825;     /* Vibrant Golden Orange (Highlight) */
+            --light-bg: #ffffff;
+            --dark-text: #333;
+        }
+
+        /* Header/Navbar styles */
+        header {
+            background-color: var(--primary-blue); 
+            font-family: 'Arial', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 0 2%; /* Reduced horizontal padding to 2% */
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        /* --- LOGO STYLES --- */
+        .logo-container {
+            /* Ensures the logo area doesn't shrink and aligns it */
+            flex-shrink: 0; 
+            padding: 10px 20px 10px 0; /* Vertical padding and space to the right of the logo */
+        }
+
+        .logo-container img {
+            height: 50px; /* Increased size slightly to make the details visible */
+            vertical-align: middle;
+        }
+        /* ------------------ */
+
+        /* Navigation (menu links) */
+        nav {
+            /* Allow the navigation container to take up maximum space */
+            flex-grow: 1; 
+            margin-left: 20px; /* Separation between the logo and the menu */
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            /* KEY CHANGE: Distribute space between main menu items */
+            justify-content: space-between; 
+            padding-right: 20px; /* Small gap before the button group */
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        /* Styling for <a> */
+        nav a {
+            display: block;
+            padding: 15px 10px; /* Reduced internal padding to allow more spacing */
+            color: var(--light-bg);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 15px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        /* Active/Hover style for primary links */
+        nav ul li:hover > a {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--accent-orange); /* Orange highlight */
+        }
+
+        /* --- Dropdown containers (First Level) - Vertical Style --- */
+        nav ul li ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--light-bg); 
+            min-width: 220px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+            display: block; 
+            padding: 0; 
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* Show dropdown on hover */
+        nav ul li:hover > ul {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Dropdown item LI */
+        nav ul li ul li {
+            position: relative; 
+            margin: 0; 
+            border-bottom: 1px solid #f0f0f0; 
+        }
+        nav ul li ul li:last-child {
+            border-bottom: none;
+        }
+
+        /* Dropdown item links */
+        nav ul li ul li a {
+            padding: 12px 20px;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+            font-weight: 400;
+            text-transform: none;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* Dropdown item hover */
+        nav ul li ul li a:hover {
+            background-color: #f8f9fa; 
+            color: var(--accent-orange); 
+        }
+        
+        /* Deep Dropdown */
+        nav ul li ul li ul {
+            top: 0;
+            left: 100%; 
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.1);
+            border-left: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        /* Dropdown item with a deep submenu (arrow styling) */
+        nav ul li ul li.has-submenu > a {
+            position: relative;
+        }
+
+        nav ul li ul li.has-submenu > a::after {
+            content: "\25BA"; /* Right-pointing triangle */
+            font-size: 0.7em;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            transition: color 0.3s;
+        }
+
+        nav ul li ul li.has-submenu:hover > a::after {
+            color: var(--accent-orange); 
+        }
+
+        nav ul li ul li.has-submenu:hover > a {
+            color: var(--accent-orange); 
+            background-color: #f8f9fa; 
+        }
+
+        /* --- Get Started Button (Kept separate from main nav flow) --- */
+        .get-started {
+            flex-shrink: 0; /* Prevents button from shrinking */
+        }
+        
+        .get-started a {
+            display: block;
+            padding: 10px 22px;
+            color: var(--dark-text);
+            background-color: var(--accent-orange);
+            border: 2px solid var(--accent-orange);
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .get-started a:hover {
+            background-color: #f5b041;
+            border-color: #f5b041;
+            color: var(--dark-text);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="images.jpeg" alt="Organization Logo">
+    </div>
+    
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            
+            <li class="has-submenu"><a href="#">About</a>
+                <ul>
+                    <li><a href="#">Mission</a></li>
+                    <li><a href="#">Team</a></li>
+                </ul>
+            </li>
+            
+            <li class="has-submenu"><a href="#">Network</a>
+                <ul>
+                    <li><a href="#">Directory</a></li>
+                    <li><a href="#">Reunions</a></li>
+                </ul>
+            </li>
+            
+            <li class="has-submenu"><a href="#">Events</a>
+                <ul>
+                    <li><a href="#">Upcoming</a></li>
+                    <li class="has-submenu"><a href="#">Gallery</a>
+                        <ul>
+                            <li><a href="#">Photos</a></li>
+                            <li><a href="#">Videos</a></li>
+                            <li><a href="#">Archives</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="has-submenu"><a href="#">Achievements</a>
+                <ul>
+                    <li><a href="#">Notable Alumni</a></li>
+                    <li><a href="#">Awards</a></li>
+                </ul>
+            </li>
+
+            <li class="has-submenu"><a href="#">Contribute</a>
+                <ul>
+                    <li><a href="#">Donate</a></li>
+                    <li><a href="#">Volunteer</a></li>
+                </ul>
+            </li>
+
+            <li class="has-submenu"><a href="#">Career</a>
+                <ul>
+                    <li><a href="#">Jobs</a></li>
+                    <li><a href="#">Mentorship</a></li>
+                </ul>
+            </li>
+
+            <li class="has-submenu"><a href="#">Contact</a>
+                <ul>
+                    <li><a href="#">Info</a></li>
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="get-started">
+        <a href="#">JOIN NOW</a>
+    </div>
+</header>
+
+</body>
+</html>
